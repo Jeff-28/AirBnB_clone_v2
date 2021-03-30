@@ -10,7 +10,7 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
-
+from shlex import split
 
 class HBNBCommand(cmd.Cmd):
     """ Contains the functionality for the HBNB console"""
@@ -19,7 +19,7 @@ class HBNBCommand(cmd.Cmd):
     prompt = '(hbnb) ' if sys.__stdin__.isatty() else ''
 
     classes = {
-               'BaseModel': BaseModel, 'User': User, 'Place': Place,
+               'BaseModel': BaseModel, 'User': User, "Place": Place,
                'State': State, 'City': City, 'Amenity': Amenity,
                'Review': Review
               }
@@ -115,16 +115,34 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """ Create an object of any class"""
+        argList = args.split()
         if not args:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
+        elif argList[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[args]()
-        storage.save()
+        else:
+            new_dict = {}
+            for string in argList[1:]:
+                keyValue = string.split('=')
+                key = keyValue[0]
+                value = keyValue[1]
+                if '"' == value[0] == value[-1]:
+                    value = split(value)
+                    value = value[0].replace("_", " ")
+                else:
+                    try:
+                        value = int(value)
+                    except:
+                        try:
+                            value = float(value)
+                        except:
+                            continue
+                new_dict[key] = value
+            new_instance = HBNBCommand.classes[argList[0]](**new_dict)
         print(new_instance.id)
-        storage.save()
+        new_instance.save()
 
     def help_create(self):
         """ Help information for the create method """
