@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 """ This module contains the DBStorage class"""
 import models
-from sqlalchemy import (create_engine)
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.orm import scoped_session
-from os import getenv
+import sqlalchemy
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, scoped_session
+from os import environ, getenv
 from models.base_model import BaseModel, Base
 from models.user import User
 from models.place import Place
