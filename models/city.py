@@ -8,16 +8,8 @@ from os import getenv
 
 class City(BaseModel, Base):
     """ Define the class City that inherits from BaseModel """
+
     __tablename__ = 'cities'
-
-    if getenv('HBNB_TYPE_STORAGE') == 'db':
-        state_id = Column(String(60), ForeignKey('states.id'), nullable=False)
-        name = Column(String(128), nullable=False)
-        places = relationship("Place", passive_deletes=True, backref="cities")
-    else:
-        state_id = ""
-        name = ""
-
-    def __init__(self, *args, **kwargs):
-        """Instantiates a City object"""
-        super().__init__(*args, **kwargs)
+    name = Column(String(128), nullable=False)
+    state_id = Column(String(60), ForeignKey('states.id'), nullable=False)
+    places = relationship("Place", cascade="all, delete", backref="cities")
