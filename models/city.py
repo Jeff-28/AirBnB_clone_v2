@@ -10,6 +10,14 @@ class City(BaseModel, Base):
     """ Define the class City that inherits from BaseModel """
 
     __tablename__ = 'cities'
-    name = Column(String(128), nullable=False)
-    state_id = Column(String(60), ForeignKey('states.id'), nullable=False)
-    places = relationship("Place", cascade="all, delete", backref="cities")
+    if getenv('HBNB_STORAGE_TYPE') == 'db':
+        name = Column(String(128), nullable=False)
+        state_id = Column(String(60), ForeignKey('states.id'), nullable=False)
+        places = relationship("Place", cascade="all, delete", backref="cities")
+    else:
+        name = ""
+        state_id = ""
+
+    def __init__(self, *args, **kwargs):
+        """Class constructor"""
+        super().__init__(*args, **kwargs)
