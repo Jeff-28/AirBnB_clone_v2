@@ -1,11 +1,12 @@
 #!/usr/bin/python3
 """ Module of the State class """
-from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, Integer
+import sqlalchemy
+from sqlalchemy import Column, String, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 from models.base_model import BaseModel, Base
 import models
 from os import getenv
+from models.city import City
 
 
 class State(BaseModel, Base):
