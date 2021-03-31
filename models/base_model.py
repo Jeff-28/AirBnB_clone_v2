@@ -1,14 +1,16 @@
 #!/usr/bin/python3
-
 """ This module defines the BaseModel class """
 import uuid
 from datetime import datetime
 import models
 from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
+from os import getenv
 
-
-Base = declarative_base()
+if getenv('HBNB_TYPE_STORAGE') == 'db':
+    Base = declarative_base()
+else:
+    Base = object
 
 
 class BaseModel:
@@ -24,7 +26,6 @@ class BaseModel:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
-            #models.storage.new(self)
         else:
             if kwargs.get('created_at'):
                 kwargs["created_at"] = datetime.strptime(
