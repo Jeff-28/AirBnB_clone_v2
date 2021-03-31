@@ -4,7 +4,7 @@ import sqlalchemy
 from models.base_model import BaseModel, Base
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, String, Integer, ForeignKey
-
+from os import getenv
 
 class User(BaseModel, Base):
     """This class defines a user by various attributes"""
