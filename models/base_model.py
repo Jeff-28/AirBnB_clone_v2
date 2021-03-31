@@ -24,7 +24,7 @@ class BaseModel:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
-            models.storage.new(self)
+            #models.storage.new(self)
         else:
             if kwargs.get('created_at'):
                 kwargs["created_at"] = datetime.strptime(
@@ -78,4 +78,4 @@ class BaseModel:
 
     def delete(self):
         """ delete's the current instance from the storage """
-        models.storage.delete(self):
+        models.storage.delete(self)
