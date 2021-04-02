@@ -13,6 +13,9 @@ from models.city import City
 from models.amenity import Amenity
 from models.review import Review
 
+classes = {"Amenity": Amenity, "City": City,
+           "Place": Place, "Review": Review, "State": State, "User": User}
+
 
 class DBStorage:
     """ DBStorage class creates engine and a new session """
@@ -35,10 +38,10 @@ class DBStorage:
     def all(self, cls=None):
         """ Returns a dictionary of the object """
         obj = {}
-        clss = [value for key, value in models.classes.items()]
+        clss = [value for key, value in classes.items()]
         if cls:
             if isinstance(cls, str):
-                cls = models.classes[cls]
+                cls = classes[cls]
             clss = [cls]
         for one_class in clss:
             for value in self.__session.query(one_class):
