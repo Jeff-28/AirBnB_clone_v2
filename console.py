@@ -2,6 +2,7 @@
 """ Console Module """
 import cmd
 import sys
+import models
 from models.base_model import BaseModel
 from models.__init__ import storage
 from models.user import User
@@ -125,21 +126,22 @@ class HBNBCommand(cmd.Cmd):
         else:
             new_dict = {}
             for string in argList[1:]:
-                keyValue = string.split('=')
-                key = keyValue[0]
-                value = keyValue[1]
-                if '"' == value[0] == value[-1]:
-                    value = split(value)
-                    value = value[0].replace("_", " ")
-                else:
-                    try:
-                        value = int(value)
-                    except:
+                if '=' in string:
+                    keyValue = string.split('=', 1)
+                    key = keyValue[0]
+                    value = keyValue[1]
+                    if '"' == value[0] == value[-1]:
+                        value = split(value)
+                        value = value[0].replace("_", " ")
+                    else:
                         try:
-                            value = float(value)
+                            value = int(value)
                         except:
-                            continue
-                new_dict[key] = value
+                            try:
+                                value = float(value)
+                            except:
+                                continue
+                    new_dict[key] = value
             new_instance = HBNBCommand.classes[argList[0]](**new_dict)
         print(new_instance.id)
         new_instance.save()
@@ -216,22 +218,21 @@ class HBNBCommand(cmd.Cmd):
         print("[Usage]: destroy <className> <objectId>\n")
 
     def do_all(self, args):
-        """ Shows all objects, or all objects of a class"""
-        print_list = []
-
-        if args:
-            args = args.split(' ')[0]  # remove possible trailing args
-            if args not in HBNBCommand.classes:
-                print("** class doesn't exist **")
-                return
-            for k, v in storage._FileStorage__objects.items():
-                if k.split('.')[0] == args:
-                    print_list.append(str(v))
+        """Prints string representations of instances"""
+        argList = split(args)
+        obj_list = []
+        if len(args) == 0:
+            obj_dict = models.storage.all()
+        elif argList[0] in self.classes:
+            obj_dict = models.storage.all(self.classes[argList[0]])
         else:
-            for k, v in storage._FileStorage__objects.items():
-                print_list.append(str(v))
-
-        print(print_list)
+            print("** class doesn't exist **")
+            return
+        for key in obj_dict:
+            obj_list.append(str(obj_dict[key]))
+        print("[", end="")
+        print(", ".join(obj_list), end="")
+        print("]")
 
     def help_all(self):
         """ Help information for the all command """
