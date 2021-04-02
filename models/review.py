@@ -8,7 +8,7 @@ from sqlalchemy.orm import relationship
 from os import getenv
 
 
-class Review(BaseModel):
+class Review(BaseModel, Base):
     """ Review classto store review information"""
     __tablename__ = 'reviews'
     if getenv('HBNB_TYPE_STORAGE') == 'db':
@@ -20,6 +20,6 @@ class Review(BaseModel):
         user_id = ""
         text = ""
 
-    def __init__(sel, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         """Class constructor"""
         super().__init__(*args, **kwargs)
