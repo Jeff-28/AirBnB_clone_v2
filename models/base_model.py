@@ -16,9 +16,10 @@ else:
 
 class BaseModel:
     """ Base class for other classes to be used for the duration """
-    id = Column(String(60), unique=True, primary_key=True, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow(), nullable=False)
-    updated_at = Column(DateTime, default=datetime.utcnow(), nullable=False)
+    if getenv('HBNB_TYPE_STORAGE') == 'db':
+        id = Column(String(60), unique=True, primary_key=True, nullable=False)
+        created_at = Column(DateTime, default=datetime.utcnow(), nullable=False)
+        updated_at = Column(DateTime, default=datetime.utcnow(), nullable=False)
 
     def __init__(self, *args, **kwargs):
         """ Initialize public instance attributes """
@@ -38,13 +39,13 @@ class BaseModel:
                 kwargs["updated_at"] = datetime.strptime(
                     kwargs["updated_at"], "%Y-%m-%dT%H:%M:%S.%f")
             else:
-                self.created_at = datetime.now()
+                self.updated_at = datetime.now()
 
             if kwargs.get('id') is None:
                 self.id = str(uuid.uuid4())
 
             for key, val in kwargs.items():
-                if "__class__" not in key:
+                if "__class__" != key:
                     setattr(self, key, val)
 
     def __str__(self):
